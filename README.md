@@ -155,10 +155,13 @@ mysql -u root -p -P 3307 < desktop/api/base.sql
 Voici un aperçu de l'interface utilisateur web permettant la gestion de la bibliothèque audio et la configuration des playlists.
 
 ### Interface Principale & Bibliothèque MP3
-[SCREENSHOT]
+![Interface Principale & Bibliothèque MP3](web/captures/Interface%20Principale%20%26%20Biblioth%C3%A8que%20MP3.PNG)
 
 ### Générateur Intelligent de Playlist & Lecteur Audio
-[SCREENSHOT]
+![Générateur Intelligent de Playlist & Lecteur Audio](web/captures/G%C3%A9n%C3%A9rateur%20Intelligent%20de%20Playlist%20%26%20Lecteur%20Audio.PNG)
+
+### Détail de la Génération de Playlist
+![Génération](web/captures/Generation.PNG)
 
 ---
 
