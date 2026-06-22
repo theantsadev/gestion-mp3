@@ -36,34 +36,34 @@ Le système applique le pattern d'intégration d'applications d'entreprise (EAI)
 
 ```mermaid
 graph TD
-    subgraph Client Ingestion (Desktop CLI)
-        SOURCES[Dossier local /sources] -->|Détecte les nouveaux MP3| P1[P1: SourceListener.php]
-        P1 -->|Publie les chemins MP3| RMQ1[RabbitMQ: queue_p1_p2]
-        RMQ1 -->|Consomme les chemins| P2[P2: MetaDataExtractor.php]
+    subgraph ClientIngestion["Client Ingestion - Desktop CLI"]
+        SOURCES["Dossier local /sources"] -->|Détecte les nouveaux MP3| P1["P1: SourceListener.php"]
+        P1 -->|Publie les chemins MP3| RMQ1["RabbitMQ: queue_p1_p2"]
+        RMQ1 -->|Consomme les chemins| P2["P2: MetaDataExtractor.php"]
         P2 -->|Extrait les tags ID3 via getID3| P2
-        P2 -->|Publie les métadonnées + chemin| RMQ2[RabbitMQ: queue_p2_p3]
-        RMQ2 -->|Consomme le payload| P3[P3: ApiSender.php]
+        P2 -->|Publie les métadonnées + chemin| RMQ2["RabbitMQ: queue_p2_p3"]
+        RMQ2 -->|Consomme le payload| P3["P3: ApiSender.php"]
     end
 
-    subgraph Broker & Centralized Logs
-        P1 -.->|Logs| RMQ_L[RabbitMQ: queue_logs]
+    subgraph BrokerLogs["Broker et Logs Centralisés"]
+        P1 -.->|Logs| RMQ_L["RabbitMQ: queue_logs"]
         P2 -.->|Logs| RMQ_L
         P3 -.->|Logs| RMQ_L
-        RMQ_L -->|Enregistre les traces| LOGGER[Logger.php]
-        LOGGER -->|Fichiers de logs| LOGFILES[(Logs locaux)]
+        RMQ_L -->|Enregistre les traces| LOGGER["Logger.php"]
+        LOGGER -->|Fichiers de logs| LOGFILES[("Logs locaux")]
     end
 
-    subgraph Serveur API & Base de données
-        P3 -->|Upload Multipart: Fichier + JSON| API[API REST: Flight PHP]
-        API -->|Stockage Physique| UPLOADS[Dossier /uploads]
-        API -->|Persistance SQL| DB[(Base de données MySQL)]
+    subgraph ServeurAPI["Serveur API et Base de données"]
+        P3 -->|Upload Multipart: Fichier + JSON| API["API REST: Flight PHP"]
+        API -->|Stockage Physique| UPLOADS["Dossier /uploads"]
+        API -->|Persistance SQL| DB[("Base de données MySQL")]
     end
 
-    subgraph Client Web (React SPA)
-        SPA[React App + TypeScript] -->|Consomme les endpoints REST| API
-        SPA -->|Sélection / Exclusion de critères & Durée| SPA
-        SPA -->|Génère la playlist optimale sac à dos| SPA
-        SPA -->|Lecture audio & Téléchargement ZIP| SPA
+    subgraph ClientWeb["Client Web - React SPA"]
+        SPA["React App + TypeScript"] -->|Consomme les endpoints REST| API
+        SPA -->|Sélection et Exclusion de critères| SPA
+        SPA -->|Génère la playlist optimale| SPA
+        SPA -->|Lecture audio et Téléchargement ZIP| SPA
     end
 ```
 
@@ -108,8 +108,8 @@ mysql -u root -p -P 3307 < desktop/api/base.sql
    ```bash
    composer install
    ```
-3. Vérifiez la configuration dans [desktop/config/config.php](file:///c:/Users/Mike/Documents/Etude/S6/MrNaina/gestion-mp3/desktop/config/config.php) (hôtes, ports, identifiants RabbitMQ et API).
-4. Vérifiez la configuration de la base de données dans [desktop/api/database.php](file:///c:/Users/Mike/Documents/Etude/S6/MrNaina/gestion-mp3/desktop/api/database.php).
+3. Vérifiez la configuration dans `desktop/config/config.php` (hôtes, ports, identifiants RabbitMQ et API).
+4. Vérifiez la configuration de la base de données dans `desktop/api/database.php`.
 5. Lancez l'ensemble des services d'ingestion et le serveur API :
    *   **Sous Windows :** Exécutez le script d'initialisation rapide :
        ```bash
