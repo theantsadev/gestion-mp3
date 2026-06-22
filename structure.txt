@@ -1,0 +1,10 @@
+desktop/
+├── sources/                  # dépôt mp3 entrants
+├── logs/                     # fichiers log horodatés
+├── src/
+│   ├── SourceListener.php    # P1 - surveille sources/
+│   ├── MetaDataExtractor.php # P2 - extrait les métadonnées
+│   └── ApiSender.php         # P3 - envoie à l'API + supprime
+├── config/
+│   └── config.php            # URL API, chemins, intervalles...
+└── run.php                   # point d'entrée (lance P1 en boucle)

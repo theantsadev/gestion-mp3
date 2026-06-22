@@ -1,0 +1,95 @@
+1. Environnement
+
+
+
+
+
+Quelle version de PHP tu utilises ? : PHP 8.2.12
+
+
+
+Tu lances les scripts en ligne de commande (php SourceListener.php) ou via un serveur web ? : en ligne de cmd 
+
+
+
+2. P1 — SourceListener
+
+
+
+
+
+La boucle toutes les 5 min : sleep() dans le script ou cron job externe ? : sleep()
+
+
+
+Comment P1 transmet la liste à P2 ? Plusieurs options :
+
+
+
+
+
+Appel direct (include / exec)
+
+
+
+Fichier JSON temporaire
+
+
+
+Message broker (RabbitMQ, etc.) : RabbitMQ
+
+3. P2 — MetaDataExtractor
+
+
+
+
+
+Pour lire les métadonnées MP3, il faut une librairie PHP. La plus connue est getID3 (pas besoin de Composer, juste un dossier à inclure). Tu es ok avec ça ? : oui 
+
+4. P3 — ApiSender
+
+L'URL de l'API : c'est quoi comme backend ? (Laravel, Node, autre ?) : Php flight ou bien php en dur meme
+P3 envoie quoi exactement ? 
+
+Le fichier MP3 (multipart/form-data) + les métadonnées ?
+Ou juste les métadonnées (JSON) ? : la parti web exige ca 
+# Web : React
+
+Aleo asina CRUD ana mp3 ihany (satria mety tsy azo dol le metadata)
+- api
+	- misauvegarder an le file
+	- misauvegarder anaty base de donnees
+- generation de playlist
+- misy interface
+	- mampiditra critere
+		- genre - artiste - langue
+		- duree totale an le playlist
+	- le programme no mipropose an le playlist possible mifanaraka an le critere
+		- afaka manolo le olona
+	- rehefa afapo le olona
+		- afaka sauvegardena le playlist
+	- pour chaque playlist
+		- afaka play eo no eo, pause...
+		- afaka telechargena au format zip 
+
+
+
+
+Authentification sur l'API ? (token, clé API...) : pas forcement 
+
+
+Nb : 
+programmation distribuee avec message broker ilay atao (afaka atao anaty CV)
+
+---
+
+Generation playlist:
+- selections multiple daholo le criteres
+	- tokony asina exclusion multiple koa
+- tanjona: valeur absolue ana playlist manakaiky indrindra amle duree
+
+Ny log aleo centralisena:
+- programme iray hafa no manoratra log
+- p1 - p2 - p3 mandefa string dia misy programme mitokana manoratra log fotsiny
+
+
