@@ -1,3 +1,4 @@
+-- Active: 1782298057016@@127.0.0.1@3307@gestion_mp3
 CREATE DATABASE gestion_mp3;
 
 USE gestion_mp3;

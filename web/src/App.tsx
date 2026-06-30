@@ -557,9 +557,9 @@ function App() {
                 <div className="duration-slider-container">
                   <input 
                     type="range" 
-                    min="5" 
+                    min="1" 
                     max="240" 
-                    step="5"
+                    step="1"
                     value={targetDurationMin}
                     onChange={(e) => setTargetDurationMin(parseInt(e.target.value))}
                     className="slider"

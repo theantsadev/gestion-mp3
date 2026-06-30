@@ -59,14 +59,16 @@ class SourceListener
     {
         echo "[P1] Scan de : " . SOURCES_DIR . "\n";
 
-        // Vérifie que le dossier existe
         if (!is_dir(SOURCES_DIR)) {
             Logger::send('P1', 'ERROR', 'Dossier sources/ introuvable : ' . SOURCES_DIR);
             return;
         }
 
-        // Récupère tous les fichiers .mp3
-        $files = glob(SOURCES_DIR . '*.mp3');
+        // Récupère tous les fichiers du dossier, filtre les .mp3 insensible à la casse
+        $allFiles = scandir(SOURCES_DIR);
+        $files = array_filter($allFiles, function (string $file) {
+            return strtolower(pathinfo($file, PATHINFO_EXTENSION)) === 'mp3';
+        });
 
         if (empty($files)) {
             echo "[P1] Aucun fichier MP3 trouvé.\n";
@@ -76,9 +78,8 @@ class SourceListener
 
         $list = [];
 
-        foreach ($files as $filePath) {
-            $absolutePath = realpath($filePath);
-            $fileName     = basename($filePath);
+        foreach ($files as $fileName) {
+            $absolutePath = realpath(SOURCES_DIR . $fileName);
 
             echo "[P1] Fichier trouvé : {$absolutePath}\n";
             Logger::send('P1', 'INFO', "Fichier trouvé : {$absolutePath}");
@@ -89,7 +90,6 @@ class SourceListener
             ];
         }
 
-        // Envoie la liste dans la queue P1 → P2
         $this->publish($list);
     }
 

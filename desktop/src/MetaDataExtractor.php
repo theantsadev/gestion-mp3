@@ -3,9 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/Logger.php';
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/Logger.php';
+require_once __DIR__ . '/../utils/helpers.php'; // Ajouté pour inclure la fonction isBlacklisted
 
 // Ajoute cette ligne
 require_once __DIR__ . '/../vendor/james-heinrich/getid3/src/GetID3.php';
@@ -85,20 +83,28 @@ class MetaDataExtractor
 
             try {
                 $metadata = $this->extract($path, $filename);
-                $results[] = $metadata;
 
-                Logger::send(
-                    'P2',
-                    'INFO',
-                    "Extraction OK : {$filename} → " .
-                        "titre: {$metadata['title']}, " .
-                        "artiste: {$metadata['artist']}, " .
-                        "durée: {$metadata['duration_formatted']}"
-                );
+                // Vérifie la blacklist ICI, juste après extraction
+                if (isBlacklisted($metadata)) {
+                    $blacklistDir = __DIR__ . '/../blacklisted/';
+                    if (!is_dir($blacklistDir)) mkdir($blacklistDir, 0777, true);
+
+                    rename($path, $blacklistDir . $filename);
+
+                    echo "[P2] Blacklisté → déplacé : {$filename}\n";
+                    Logger::send('P2', 'WARNING', "Blacklisté : {$filename}");
+                    continue; // passe au fichier suivant sans ajouter à $results
+                }
+
+                $results[] = $metadata;
+                Logger::send('P2', 'INFO', "Extraction OK : {$filename} → ...");
             } catch (Exception $e) {
                 Logger::send('P2', 'ERROR', "Extraction KO : {$filename} → " . $e->getMessage());
             }
         }
+
+        
+
 
         // Envoie les résultats dans la queue P2 → P3
         if (!empty($results)) {
