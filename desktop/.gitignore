@@ -1,0 +1,7 @@
+# Logs
+logs
+*.log
+
+# Mp3 files
+*.mp3
+*.zip
